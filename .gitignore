@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+.npm-cache/
+server-start.log
+dev-server.*.log
+dev-run.log
+start-*.log
+.chrome-*/
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+.env
+*.db

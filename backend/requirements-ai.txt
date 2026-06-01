@@ -1,0 +1,7 @@
+# Optional AI/RAG orchestration layer.
+# Install this on Python 3.12 for the widest wheel compatibility:
+#   pip install -r requirements-ai.txt
+instructor==1.8.3
+langchain==0.3.25
+langgraph==0.4.8
+llama-index==0.12.38
