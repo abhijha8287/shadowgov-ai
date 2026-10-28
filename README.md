@@ -1,8 +1,59 @@
 # ShadowGov AI
 
-ShadowGov AI is an AI-powered civic transparency dashboard for citizens, moderators, officers, and admins. It helps track public complaints, government projects, budgets, departments, civic maps, analytics, and AI-assisted civic insights from one clean interface.
+A civic transparency dashboard for tracking public complaints, government projects, budgets and department performance, with a map and an AI assistant.
 
-The current demo app is built so it can run quickly on a local machine. The frontend uses local role switching and browser storage so you can test workflows immediately without setting up authentication first.
+## Why this exists
+Information about local complaints, public works and spending is usually scattered and hard for citizens to follow. This is a working demo of one dashboard where citizens, moderators, officers and admins see the same data from their own role.
+
+## What it does
+- Role-based views for Citizen, Moderator, Officer and Admin (switchable locally for testing)
+- Citizens file complaints; anyone can filter them by status or search text
+- Officers create projects and create or edit budgets
+- Civic map with ward zones, complaint and project pins, and risk zones
+- Project table with progress, budget, status and risk score; department performance overview
+- Charts for complaint trends and department load, and an AI assistant page for civic questions
+- Dark mode; works on desktop and mobile
+
+## Project structure
+```
+shadowgov-ai/
+├── backend/
+│   ├── app/core/      Settings
+│   ├── app/db/        Database session
+│   ├── app/services/  AI and domain services
+│   ├── app/main.py    FastAPI app
+│   ├── app/models.py  Database tables
+│   ├── app/schemas.py Request and response models
+│   └── seed.py        Demo data loader
+├── frontend/
+│   ├── app/           Dashboard, complaints, projects, budget, maps pages
+│   ├── components/    UI components
+│   └── lib/           State and API helpers
+├── .github/           CI workflow
+├── screenshot-*.png   UI screenshots
+└── docker-compose.yml Local stack
+```
+
+## Getting started
+Requirements: Node.js 18+; Python 3.11+ for the backend (optional for UI testing).
+```bash
+git clone https://github.com/abhijha8287/shadowgov-ai.git
+cd shadowgov-ai
+cp .env.example .env
+
+cd frontend                                       # terminal 1
+npm install
+npm run dev                                       # http://localhost:3000
+
+cd backend                                        # terminal 2 (optional)
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload --port 8000   # http://localhost:8000/docs
+```
+The frontend keeps demo data in browser storage, so it works without the backend.
+
+## Tech stack
+Next.js 15, React 19, TypeScript, Tailwind CSS, Zustand, React Query, Recharts, Python, FastAPI, SQLAlchemy, Pydantic, Docker
 
 ## Screenshots
 
@@ -21,176 +72,6 @@ The current demo app is built so it can run quickly on a local machine. The fron
 ### Budget
 
 ![Budget](./screenshot-budget.png)
-
-## Main Features
-
-- Role-based dashboard views for Citizen, Moderator, Officer, and Admin
-- Citizen complaint creation with instant reflection in the complaints board
-- Complaint filtering by status and search text
-- Officer project creation from the Projects page
-- Officer budget creation and editing from the Budget page
-- Live civic map with ward zones, complaint pins, project pins, risk zones, and priority summaries
-- Project monitoring table with progress, budget, status, and risk scoring
-- Department performance overview
-- Analytics charts for complaint trends and department load
-- AI assistant page for civic questions and summaries
-- Dark mode toggle
-- Responsive UI for desktop and mobile
-
-## Tech Stack
-
-### Frontend
-
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS
-- Zustand for local persisted state
-- React Query
-- Recharts
-- Lucide React icons
-
-### Backend
-
-- FastAPI
-- SQLAlchemy
-- Pydantic settings
-- Redis and Celery-ready structure
-- OpenAI service boundary
-- PostgreSQL/pgvector-ready Docker setup
-
-## Project Structure
-
-```text
-ShadowGov AI/
-  backend/
-    app/
-      core/
-      db/
-      services/
-      main.py
-      models.py
-      schemas.py
-    requirements.txt
-    seed.py
-  frontend/
-    app/
-      dashboard/
-      complaints/
-      projects/
-      budget/
-      maps/
-    components/
-    lib/
-    package.json
-  docker-compose.yml
-  README.md
-```
-
-## How To Download On Your Local Machine
-
-You need Git, Node.js, and Python installed.
-
-### 1. Install Required Software
-
-Install these first:
-
-- Git: https://git-scm.com/downloads
-- Node.js LTS: https://nodejs.org
-- Python 3.11 or newer: https://www.python.org/downloads
-
-After installing, open a terminal and check:
-
-```bash
-git --version
-node --version
-npm --version
-python --version
-```
-
-### 2. Download The Project
-
-Use this command:
-
-```bash
-git clone git@github.com:abhijha8287/shadowgov-ai.git
-```
-
-Then open the folder:
-
-```bash
-cd shadowgov-ai
-```
-
-If SSH is not set up on your computer, download the ZIP from GitHub instead:
-
-1. Open the GitHub repository in your browser.
-2. Click `Code`.
-3. Click `Download ZIP`.
-4. Extract the ZIP.
-5. Open the extracted folder in VS Code or terminal.
-
-## Run The Frontend
-
-The frontend is the main UI.
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open this in your browser:
-
-```text
-http://localhost:3000
-```
-
-If port `3000` is busy, run:
-
-```bash
-npm run dev -- --port 3001
-```
-
-Then open:
-
-```text
-http://localhost:3001
-```
-
-## Run The Backend
-
-Open a second terminal from the project root.
-
-```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload --port 8000
-```
-
-Open the backend API docs:
-
-```text
-http://localhost:8000/docs
-```
-
-On macOS/Linux, activate the virtual environment with:
-
-```bash
-source .venv/bin/activate
-```
-
-## Run With Docker
-
-If you have Docker installed, you can start the full stack with:
-
-```bash
-docker compose up --build
-```
-
-This is useful when you want PostgreSQL, Redis, backend, and frontend services running together.
 
 ## How To Use The App
 
@@ -345,15 +226,6 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .venv\Scripts\activate
 ```
 
-## Build For Production
-
-From the frontend folder:
-
-```bash
-npm run build
-npm run start
-```
-
 ## Architecture
 
 ```mermaid
@@ -383,25 +255,4 @@ erDiagram
   COMPLAINTS ||--o{ AI_INSIGHTS : analyzed_by
   PROJECTS ||--o{ AI_INSIGHTS : monitored_by
   USERS ||--o{ NOTIFICATIONS : receives
-```
-
-## GitHub Push Commands
-
-If this is a fresh local folder, use:
-
-```bash
-git init
-git add .
-git commit -m "Initial ShadowGov AI app"
-git remote add origin git@github.com:abhijha8287/shadowgov-ai.git
-git branch -M master
-git push -u origin master
-```
-
-If the remote already exists, use:
-
-```bash
-git remote set-url origin git@github.com:abhijha8287/shadowgov-ai.git
-git branch -M master
-git push -u origin master
 ```
